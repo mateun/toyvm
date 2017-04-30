@@ -51,6 +51,7 @@ private:
 private:
 	void e_consti();
 	void e_addi();
+	void e_addb();
 	void e_subi();
 	void e_constb();
 	void e_constw();

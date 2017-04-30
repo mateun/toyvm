@@ -1,5 +1,6 @@
 #include "vm.h"
 #include <iostream>
+#include <stdio.h>
 
 void VM::e_addi() {
 	ui32 val1 = _stack[_sp--];
@@ -9,12 +10,21 @@ void VM::e_addi() {
 
 }
 
+
+void VM::e_addb() {
+	ubyte v1 = _stack[_sp--];
+	ubyte v2 = _stack[_sp--];
+	_stack[++_sp] = v1 + v2;
+	_cp++;	
+}
+
 void VM::e_subi() {}
 
 
 
 void VM::e_constb() {
 	ubyte val = _code[++_cp];
+	printf("val: %u\n", val);
 	_stack[++_sp] = val;
 	_cp++;
 }
@@ -49,6 +59,5 @@ void VM::e_jmp() {
 	
 	ui32 address = val1 | (val2 << 8) | (val3 << 16) | (val4 << 24);
 	_cp = address;	
-	
 
 }

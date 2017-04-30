@@ -1,30 +1,35 @@
 #include <iostream>
 #include "vm.h"
-
-
-ubyte code[255] = {
-	8, // constb
-	77, 
-	10,
-	9,
-	0, 
-	0,
-	0,
-	8,
-	255,
-	8,
-	99,
-	0
-		
-};
+#include <stdio.h>
 
 
 int main(int argc, char** args)  {
 
+
+	ubyte code[255];
+	if (argc == 2) {
+		const char* infile = args[1];
+		FILE* binfile = fopen(infile, "rb");				
+		if (binfile == NULL) {
+			printf("file not opened!\n");
+			exit(1);
+		}
+		int nr = fread(code, 1, 255, binfile);
+
+		// this is of course unsafe but lets do it now for quick testing, 
+		// adding a trailing 0 to end our code:
+		code[nr] = 0;
+
+		for (int i = 0; i<=nr; ++i) {
+			printf("code: %d: %u\n",i, (unsigned)code[i]);
+		}
+		fclose(binfile);
+	}
+
 	ubyte heap[512];
 	ubyte stack[256];
 	
-	VM vm(code, 2, heap, 512, stack, 256);		
+	VM vm(code, 13, heap, 512, stack, 256);		
 	std::string regs = vm.regdump();
 	std::string sd = vm.stackdump();
 	std::cout << "regs before: " << regs << std::endl;

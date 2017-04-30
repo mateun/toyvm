@@ -1,11 +1,14 @@
 #include "vm.h"
 #include "commands.h"
 #include <iostream>
+#include <stdio.h>
 
 
 void VM::run() {
 	
-	ui32 cmd=_code[_cp];
+	ubyte cmd=_code[_cp];
+	printf("cmd: %u\n", cmd);	
+
 	while (cmd != 0) {
 		cmd = _code[_cp];	
 		switch (cmd) {
@@ -13,6 +16,7 @@ void VM::run() {
 				case (constb): e_constb(); break;
 				case (jmp): e_jmp(); break;
 				case (addi): e_addi(); break;
+				case (addb): e_addb(); break;
 				case (subi): e_subi(); break;
 				default: break;
 		}

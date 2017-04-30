@@ -2,7 +2,7 @@
 #include "vm.h"
 
 
-int code[6] = {
+ubyte code[6] = {
 	1, // consti
 	9, // 99
 	1,  // consti
@@ -15,8 +15,8 @@ int code[6] = {
 
 int main(int argc, char** args)  {
 
-	int heap[512];
-	int stack[256];
+	ubyte heap[512];
+	ubyte stack[256];
 	
 	VM vm(code, 2, heap, 512, stack, 256);		
 	std::string regs = vm.regdump();

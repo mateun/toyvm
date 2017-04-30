@@ -7,11 +7,20 @@
  * A virtual machine which has 
  * a heap, a stack and registers pointing to 
  * the current instruction pointer etc.
+ * 
+ * The memory is byte addressable, the stack is 
+ * is always moved in 4-byte steps with 4-byte alignment 
+ * kept all times.
+ * 
+ * Multi byte values are store in Little-Endian (INTEL)
+ * format to allow for easy and direct consumption of
+ * data from Intel based machines.
+ *
 **/
 class VM {
 
 public:
-	VM(int* code, ui32 csize, int* heapmem, ui32 hmemsize, int* stack, ui32 smemsize) 
+	VM(ubyte* code, ui32 csize, ubyte* heapmem, ui32 hmemsize, ubyte* stack, ui32 smemsize) 
 		: _code(code), _heapmem(heapmem), _stack(stack) {}
 	~VM() {}
 
@@ -22,9 +31,9 @@ public:
 	virtual std::string stackdump();
 
 private:
-	int* _code;
-	int* _heapmem;
-	int* _stack;
+	ubyte* _code;
+	ubyte* _heapmem;
+	ubyte* _stack;
 	
 	ui32 _cp;
 	ui32 _sp;

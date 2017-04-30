@@ -2,6 +2,7 @@
 #include "commands.h"
 #include <iostream>
 
+
 void VM::run() {
 	
 	ui32 cmd=_code[_cp];

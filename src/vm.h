@@ -3,7 +3,6 @@
 
 
 /***
-
  * A virtual machine which has 
  * a heap, a stack and registers pointing to 
  * the current instruction pointer etc.
@@ -15,6 +14,12 @@
  * Multi byte values are store in Little-Endian (INTEL)
  * format to allow for easy and direct consumption of
  * data from Intel based machines.
+
+ * Data sizes:
+		- byte: 8bit
+		- word: 16bit
+		- dword: 32bit
+		- qword: 64bit
  *
 **/
 class VM {
@@ -47,6 +52,9 @@ private:
 	void e_consti();
 	void e_addi();
 	void e_subi();
+	void e_constb();
+	void e_constw();
+	void e_jmp();
 	
 };
 

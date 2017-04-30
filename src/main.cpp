@@ -2,12 +2,18 @@
 #include "vm.h"
 
 
-ubyte code[6] = {
-	1, // consti
-	9, // 99
-	1,  // consti
-	-12,
-	2,	// addi
+ubyte code[255] = {
+	8, // constb
+	77, 
+	10,
+	9,
+	0, 
+	0,
+	0,
+	8,
+	255,
+	8,
+	99,
 	0
 		
 };

@@ -2,6 +2,13 @@
 
 Lets build a small virtual machine, just for the fun of it!
 
-It shall be a stack based machine. 
+The machine has the following main characteristics: 
 
-More to come :)
+- byte addresseable
+- has a separate stack and heap
+
+Release history: 
+0.0.1: 	absolute basic version with 10 instructions and a basic assembler 
+				for a part of the instructions (should be enough to get the 
+				principle across for further development). 				
+

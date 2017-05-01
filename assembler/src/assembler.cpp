@@ -28,7 +28,7 @@ static std::vector<ubyte> parse_args(const std::string& arg, int size) {
 struct Command {
 		ubyte cmd = 0;
 		ubyte arg_size = 0;
-		ubyte* args;
+		std::vector<ubyte> args;
 		// Does the argument reference a symbol?
 		// If yes, name it here.
 		std::string arg_sym_ref;
@@ -63,15 +63,13 @@ CommandInfo parseLine(const std::string& line) {
 	else if (cmd == "constb") {
 		ci.c.cmd = constb;
 		ci.c.arg_size = 1;
-		std::vector<ubyte> args = parse_args(arg, 1);
-		ci.c.args = args.data();
+		ci.c.args = parse_args(arg, 1);
 		return ci;
 	}
 	else if (cmd == "constw") {
 		ci.c.cmd = constw;
 		ci.c.arg_size = 2;
-		std::vector<ubyte> args = parse_args(arg, 2);
-		ci.c.args = args.data();
+		ci.c.args = parse_args(arg, 2);
 		return ci;
 	}
 	else if (cmd == "jmp") {
@@ -120,12 +118,12 @@ std::vector<ubyte> assembleSource(const std::string& source) {
 		if (line == "") continue;
 
 		cis.push_back(parseLine(line));	
-		for (auto& b : assembleLine(line)) {
+		/*for (auto& b : assembleLine(line)) {
 			// instead of directly pushing the bytecode into our
 			// vector, we would do separate passes with the command infos here. 
 			// see above!
 			assembly.push_back(b);	
-		}	
+		}*/	
 	}	
 
 	// Go through the commandInfos and resolve symbols etc.
@@ -136,6 +134,10 @@ std::vector<ubyte> assembleSource(const std::string& source) {
 			printf("found referenced symbol: %s\n", ci.c.arg_sym_ref.c_str());
 			sym_tab[ci.c.arg_sym_ref+":"] = -1;
 		}
+		// print the arguments
+		for (auto a : ci.c.args) {
+			printf("------Arg: %u\n", a);
+		}
 	}	
 	// Next, resolve symbols
 	int pos = 0;
@@ -143,14 +145,49 @@ std::vector<ubyte> assembleSource(const std::string& source) {
 		if (ci.c.cmd == 0 && ci.is_label == false) continue;		
 		printf("cmd: %u @pos: %d\n", ci.c.cmd, pos);
 		if (ci.is_label) {
-			printf("found label in resolution pass: %s at position: %d\n\n", ci.l.name.c_str(), pos+1);
-			sym_tab[ci.l.name] = pos+1;
+			printf("found label in resolution pass: %s at position: %d\n\n", ci.l.name.c_str(), pos);
+			sym_tab[ci.l.name] = pos;
 		}
 		
 		pos++; // add 1 for the command itself
 		pos += ci.c.arg_size; // add the arg size
 	}
 
+	// Dump the sym_tab
+	for(std::map<std::string, int>::iterator itty = sym_tab.begin(); itty != sym_tab.end(); ++itty) {
+		printf("key: %s: %d\n", itty->first.c_str(), itty->second);
+	}
+
+	// Next, set the correct symbols
+	pos = 0;
+	for (auto& ci : cis) {
+		if (ci.c.cmd == 0) continue;
+		
+		if (ci.c.arg_sym_ref != "") {
+			printf("looking for value of key: %s\n", ci.c.arg_sym_ref.c_str());
+			int jumpTarget = sym_tab[ci.c.arg_sym_ref + ":"];
+			printf("jmpTarget: %d\n", jumpTarget);
+			ci.c.args = parse_args(std::to_string(jumpTarget), 4);
+		}
+		printf("cmd: %u @pos: %d\n", ci.c.cmd, pos);		
+		for (int i = 0; i<ci.c.arg_size; ++i) {
+			printf("\targ: %u\n", ci.c.args.at(i));
+		}
+	
+		pos++;
+		pos += ci.c.arg_size;
+	}
+		
+	// Finally, write out the correct bytecode
+	for (auto& ci : cis) {
+		if (ci.c.cmd == 0) continue;
+		
+		assembly.push_back(ci.c.cmd);
+		for (auto a : ci.c.args) {
+			assembly.push_back(a);
+		}		
+	}	
+	
 	return assembly;
 }
 
@@ -169,20 +206,20 @@ std::vector<ubyte> assembleLine(const std::string& line) {
 	std::istringstream iss(line);
 	iss >> cmd >> arg >> std::ws;
 
-			// handle the command
-			if (cmd == "#") return assembly;
-			else if (cmd == "constb") 
-				assembly = a_cmd(1, constb, arg, assembly);
-			else if (cmd == "constw")
-				assembly = a_cmd(2, constw, arg, assembly);
-			else if (cmd == "addb")
-				assembly = a_cmd(1, addb, "", assembly);
-			else if (cmd == "addw")
-				assembly = a_cmd(2, addw, "", assembly);
-			else if (cmd == "addi")
-				assembly = a_cmd(4, addi, "", assembly);
-			else if (cmd == "jmp")
-				assembly = a_cmd(4, jmp, "0", assembly);
+	// handle the command
+	if (cmd == "#") return assembly;
+	else if (cmd == "constb") 
+		assembly = a_cmd(1, constb, arg, assembly);
+	else if (cmd == "constw")
+		assembly = a_cmd(2, constw, arg, assembly);
+	else if (cmd == "addb")
+		assembly = a_cmd(0, addb, "", assembly);
+	else if (cmd == "addw")
+		assembly = a_cmd(0, addw, "", assembly);
+	else if (cmd == "addi")
+		assembly = a_cmd(0, addi, "", assembly);
+	else if (cmd == "jmp")
+		assembly = a_cmd(4, jmp, "0", assembly);
 
-			return assembly;
+	return assembly;
 }

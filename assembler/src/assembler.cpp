@@ -18,8 +18,10 @@ static std::vector<ubyte> a_cmd(int size, int cmd, const std::string& arg, std::
 static std::vector<ubyte> parse_args(const std::string& arg, int size) {
 	std::vector<ubyte> args;
 	ui32 argi = atoi(arg.c_str());
-	for (int i=0; i<size; i++) {
+	printf("argi: %u size: %d\n", argi, size);
+	for (int i=0; i<size; ++i) {
 		ubyte b = (argi >> (8*i)) & 0xFF;
+		printf("multibyte %d=%u\n", i, b);
 		args.push_back(b);
 	}
 	return args;
@@ -68,6 +70,11 @@ CommandInfo parseLine(const std::string& line) {
 		ci.c.cmd = constw;
 		ci.c.arg_size = 2;
 		ci.c.args = parse_args(arg, 2);
+	}
+	else if (cmd == "consti") {
+		ci.c.cmd = consti;
+		ci.c.arg_size = 4;
+		ci.c.args = parse_args(arg, 4);
 	}
 	else if (cmd == "jmp") {
 		ci.c.cmd = jmp;

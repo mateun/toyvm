@@ -2,10 +2,43 @@
 #include <iostream>
 #include <stdio.h>
 
+void VM::e_addw() {
+	//printf("in addw...\n\n");
+	ubyte val1_0 = _stack[_sp--];
+	ubyte val1_1 = _stack[_sp--];
+	ui32 val1 = val1_0 | (val1_1 << 8); 
+
+	ubyte val2_0 = _stack[_sp--];
+	ubyte val2_1 = _stack[_sp--];
+	ui32 val2 = val2_0 | (val2_1 << 8);
+ 	ui32 res = val1 + val2;
+
+	for (int i = 0; i<2; ++i) {
+		ubyte b = (res >> (8*i)) & 0xFF;
+		_stack[++_sp] = b;	
+	}	
+	_cp++;
+
+}
+
 void VM::e_addi() {
-	ui32 val1 = _stack[_sp--];
-	ui32 val2 = _stack[_sp--];
-	_stack[++_sp] = val1 + val2;
+	ubyte val1_0 = _stack[_sp--];
+	ubyte val1_1 = _stack[_sp--];
+	ubyte val1_2 = _stack[_sp--];
+	ubyte val1_3 = _stack[_sp--];
+	ui32 val1 = val1_0 | (val1_1 << 8) | (val1_2 << 16) | (val1_3 << 24);
+
+	ubyte val2_0 = _stack[_sp--];
+	ubyte val2_1 = _stack[_sp--];
+	ubyte val2_2 = _stack[_sp--];
+	ubyte val2_3 = _stack[_sp--];
+	ui32 val2 = val2_0 | (val2_1 << 8) | (val2_2 << 16) | (val2_3 << 24);
+	ui32 res = val1 + val2;
+
+	for (int i = 0; i<4; ++i) {
+		ubyte b = (res >> (8*i)) & 0xFF;
+		_stack[++_sp] = b;	
+	}	
 	_cp++;
 
 }
@@ -29,7 +62,12 @@ void VM::e_constb() {
 }
 
 void VM::e_constw() {
-	
+	ui32 val1 = _code[++_cp];
+	ui32 val2 = _code[++_cp];
+	_stack[++_sp] = val1;
+	_stack[++_sp] = val2;
+
+	_cp++;
 }
 
 // store a 32bit integer on the stack.
@@ -44,7 +82,6 @@ void VM::e_consti() {
 	_stack[++_sp] = val4;
 
 	_cp++;
-	
 }
 
 

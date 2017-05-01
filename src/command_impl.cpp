@@ -24,7 +24,6 @@ void VM::e_subi() {}
 
 void VM::e_constb() {
 	ubyte val = _code[++_cp];
-	printf("val: %u\n", val);
 	_stack[++_sp] = val;
 	_cp++;
 }

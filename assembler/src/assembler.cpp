@@ -58,44 +58,40 @@ CommandInfo parseLine(const std::string& line) {
 	if (cmd == "#") {
 		ci.c.cmd = 0;
 		ci.comment = true;
-		return ci;
 	}
 	else if (cmd == "constb") {
 		ci.c.cmd = constb;
 		ci.c.arg_size = 1;
 		ci.c.args = parse_args(arg, 1);
-		return ci;
 	}
 	else if (cmd == "constw") {
 		ci.c.cmd = constw;
 		ci.c.arg_size = 2;
 		ci.c.args = parse_args(arg, 2);
-		return ci;
 	}
 	else if (cmd == "jmp") {
 		ci.c.cmd = jmp;
 		ci.c.arg_size = 4;
 		ci.c.arg_sym_ref = arg;
-		return ci;
 	}
 	else if (cmd == "addb") {
 		ci.c.cmd = addb;
 		ci.c.arg_size = 0;
-		return ci;
+	}
+	else if (cmd == "addw") {
+		ci.c.cmd = addw;
+		ci.c.arg_size = 0;
+	}
+	else if (cmd == "addi") {
+		ci.c.cmd = addi;
+		ci.c.arg_size = 0;
 	}
 	else if (cmd.compare(cmd.length()-1, 1, ":") == 0) {
 		ci.is_label = true;
 		ci.l.name = cmd;
-		
-		
 	}
-//		assembly = a_cmd(1, addb, "", assembly);
-	//else if (cmd == "addw")
-//		assembly = a_cmd(2, addw, "", assembly);
-	//else if (cmd == "addi")
-//		assembly = a_cmd(4, addi, "", assembly);
-	return ci;
 
+	return ci;
 }
 
 std::vector<ubyte> assembleFile(const std::string& fileName) {
@@ -147,10 +143,12 @@ std::vector<ubyte> assembleSource(const std::string& source) {
 		if (ci.is_label) {
 			printf("found label in resolution pass: %s at position: %d\n\n", ci.l.name.c_str(), pos);
 			sym_tab[ci.l.name] = pos;
+		} 
+		else {
+			pos++; // add 1 for the command itself
+			pos += ci.c.arg_size; // add the arg size
 		}
 		
-		pos++; // add 1 for the command itself
-		pos += ci.c.arg_size; // add the arg size
 	}
 
 	// Dump the sym_tab

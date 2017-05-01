@@ -7,7 +7,6 @@
 void VM::run() {
 	
 	ubyte cmd=_code[_cp];
-	printf("cmd: %u\n", cmd);	
 
 	while (cmd != 0) {
 		cmd = _code[_cp];	

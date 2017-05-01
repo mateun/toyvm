@@ -3,7 +3,9 @@
 #include <stdio.h>
 
 void VM::e_addw() {
-	
+	// TODO fix this - need to 
+	// pull the correct values 
+	// from 4-byte aligned stack!	
 	ubyte val1_0 = _stack[_sp--];
 	ubyte val1_1 = _stack[_sp--];
 	ui32 val1 = val1_0 | (val1_1 << 8); 

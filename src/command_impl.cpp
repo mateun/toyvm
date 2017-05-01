@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 void VM::e_addw() {
-	//printf("in addw...\n\n");
+	
 	ubyte val1_0 = _stack[_sp--];
 	ubyte val1_1 = _stack[_sp--];
 	ui32 val1 = val1_0 | (val1_1 << 8); 
@@ -69,8 +69,9 @@ void VM::e_constb() {
 void VM::e_constw() {
 	ui32 val1 = _code[++_cp];
 	ui32 val2 = _code[++_cp];
-	_stack[++_sp] = val1;
-	_stack[++_sp] = val2;
+	_sp += 4;
+	_stack[_sp] = val1;
+	_stack[_sp+1] = val2;
 
 	_cp++;
 }

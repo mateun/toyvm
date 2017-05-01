@@ -134,10 +134,22 @@ std::vector<ubyte> assembleSource(const std::string& source) {
 	for (auto& ci : cis) {
 		if (ci.c.arg_sym_ref != "") {
 			printf("found referenced symbol: %s\n", ci.c.arg_sym_ref.c_str());
-			sym_tab[ci.c.arg_sym_ref] = -1;
+			sym_tab[ci.c.arg_sym_ref+":"] = -1;
 		}
 	}	
-
+	// Next, resolve symbols
+	int pos = 0;
+	for (auto& ci : cis) {
+		if (ci.c.cmd == 0 && ci.is_label == false) continue;		
+		printf("cmd: %u @pos: %d\n", ci.c.cmd, pos);
+		if (ci.is_label) {
+			printf("found label in resolution pass: %s at position: %d\n\n", ci.l.name.c_str(), pos+1);
+			sym_tab[ci.l.name] = pos+1;
+		}
+		
+		pos++; // add 1 for the command itself
+		pos += ci.c.arg_size; // add the arg size
+	}
 
 	return assembly;
 }
@@ -169,6 +181,8 @@ std::vector<ubyte> assembleLine(const std::string& line) {
 				assembly = a_cmd(2, addw, "", assembly);
 			else if (cmd == "addi")
 				assembly = a_cmd(4, addi, "", assembly);
+			else if (cmd == "jmp")
+				assembly = a_cmd(4, jmp, "0", assembly);
 
 			return assembly;
 }

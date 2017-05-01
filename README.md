@@ -16,3 +16,6 @@ absolute basic version with 10 instructions and a basic assembler for a part of 
 #### 0.0.2:  
 implement label resolution in assembler and allow to make VM testrun 				with binary and assembler input. 
 				
+#### plan 0.0.3: 
+- align all stack actions at 4 bytes
+- fix 16 and 32-bit addition errors

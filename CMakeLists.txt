@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 14)
+set(VERSIONNR 0.0.2)
 project(toyvm)
-
 
 include_directories(include assembler/include)
 file(GLOB sources src/*.cpp)

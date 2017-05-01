@@ -12,3 +12,5 @@ Release history:
 				for a part of the instructions (should be enough to get the 
 				principle across for further development). 				
 
+0.0.2:  implement label resolution in assembler and allow to make VM testrun 				with binary and assembler input. 
+				

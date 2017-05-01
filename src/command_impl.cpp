@@ -45,9 +45,13 @@ void VM::e_addi() {
 
 
 void VM::e_addb() {
-	ubyte v1 = _stack[_sp--];
-	ubyte v2 = _stack[_sp--];
-	_stack[++_sp] = v1 + v2;
+	printf("in addb. _sp: %d\n", _sp);
+	ubyte v1 = _stack[_sp-4];
+	printf("v1: %u\n", v1);
+	ubyte v2 = _stack[_sp];
+	printf("v2: %u\n", v2);
+	_sp -= 4;
+	_stack[_sp] = v1 + v2;
 	_cp++;	
 }
 
@@ -57,8 +61,8 @@ void VM::e_subi() {}
 
 void VM::e_constb() {
 	ubyte val = _code[++_cp];
-	_stack[++_sp] = val;
-	_sp += 3;
+	_sp += 4;
+	_stack[_sp] = val;
 	_cp++;
 }
 

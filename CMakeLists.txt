@@ -6,5 +6,6 @@ project(toyvm)
 include_directories(include assembler/include)
 file(GLOB sources src/*.cpp)
 
-add_executable(vmapp ${sources})
 add_subdirectory(assembler)
+add_executable(vmapp ${sources})
+target_link_libraries(vmapp libtoyass)

@@ -1,29 +1,53 @@
 #include <iostream>
 #include "vm.h"
 #include <stdio.h>
+#include <fstream>
+#include <assembler.h>
+#include <string.h>
 
 
+/***
+	MAIN
+	Starts up a virtual machine by reading in either
+	- an assembly file
+	- a binary file
+	from the command line. 
+	The first argument indicates the type of file, 
+	the second argument is the name of the file.
+*/
 int main(int argc, char** args)  {
 
+	ubyte* code = (ubyte*) malloc(255);
+	
+	if (argc == 3) {
+		if (strcmp(args[1], "b") == 0) {
+			const char* infile = args[2];
+			FILE* binfile = fopen(infile, "rb");				
+			if (binfile == NULL) {
+				printf("file not opened!\n");
+				exit(1);
+			}
+			int nr = fread(code, 1, 255, binfile);
 
-	ubyte code[255];
-	if (argc == 2) {
-		const char* infile = args[1];
-		FILE* binfile = fopen(infile, "rb");				
-		if (binfile == NULL) {
-			printf("file not opened!\n");
-			exit(1);
+			// this is of course unsafe but lets do it now for quick testing, 
+			// adding a trailing 0 to end our code:
+			code[nr] = 0;
+
+			for (int i = 0; i<=nr; ++i) {
+				printf("code: %d: %u\n",i, (unsigned)code[i]);
+			}
+			fclose(binfile);
+		} 
+		else if (strcmp(args[1], "a")==0) {
+			const char* infile = args[2];
+			std::vector<ubyte> assembly = assembleFile(infile);
+			code = assembly.data();
+			
 		}
-		int nr = fread(code, 1, 255, binfile);
-
-		// this is of course unsafe but lets do it now for quick testing, 
-		// adding a trailing 0 to end our code:
-		code[nr] = 0;
-
-		for (int i = 0; i<=nr; ++i) {
-			printf("code: %d: %u\n",i, (unsigned)code[i]);
-		}
-		fclose(binfile);
+	} 
+	else {
+		printf("usage: vm [fileType] [fileName] \n");
+		exit(0);
 	}
 
 	ubyte heap[512];

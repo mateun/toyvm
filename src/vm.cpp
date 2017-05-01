@@ -7,10 +7,14 @@
 void VM::run() {
 	
 	ubyte cmd=_code[_cp];
+	printf("code dump (20bytes):\n");
+	for (int i=0; i<20; ++i) {
+		printf("code %u at %d\n", _code[i], i);
+	}
 
 	while (cmd != 0) {
 		cmd = _code[_cp];	
-		printf("curr. command: %u\n", cmd);
+		printf("curr. command: %u _cp: %d\n", cmd, _cp);
 		switch (cmd) {
 				case (consti): e_consti(); break;
 				case (constw): e_constw(); break;

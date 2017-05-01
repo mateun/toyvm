@@ -58,6 +58,7 @@ void VM::e_subi() {}
 void VM::e_constb() {
 	ubyte val = _code[++_cp];
 	_stack[++_sp] = val;
+	_sp += 3;
 	_cp++;
 }
 

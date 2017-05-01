@@ -18,6 +18,7 @@
 int main(int argc, char** args)  {
 
 	ubyte* code = (ubyte*) malloc(255);
+	memset(code, 0, 255);
 	
 	if (argc == 3) {
 		if (strcmp(args[1], "b") == 0) {
@@ -41,7 +42,10 @@ int main(int argc, char** args)  {
 		else if (strcmp(args[1], "a")==0) {
 			const char* infile = args[2];
 			std::vector<ubyte> assembly = assembleFile(infile);
-			code = assembly.data();
+			for (int i=0; i<assembly.size();++i) {
+				code[i] = assembly.at(i);
+			}
+
 			
 		}
 	} 

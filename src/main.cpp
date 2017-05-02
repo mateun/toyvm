@@ -62,7 +62,13 @@ int main(int argc, char** args)  {
 	std::string sd = vm.stackdump();
 	std::cout << "regs before: " << regs << std::endl;
 	std::cout << "stack before: " << sd << std::endl;
-	vm.run();
+	ubyte cmd;
+	while ((cmd = vm.fetch()) != 0) {
+		vm.execute(cmd);
+		
+		// probably call Video update function here!
+
+	}
 	regs = vm.regdump();
 	sd = vm.stackdump();
 	std::cout << "regs after: " << regs << std::endl;

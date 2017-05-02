@@ -31,6 +31,8 @@ public:
 
 public:
 	virtual void run();
+	virtual void execute(ubyte cmd);
+	virtual ubyte fetch();
 	virtual std::string regdump(); 
 	virtual std::string heapdump();
 	virtual std::string stackdump();

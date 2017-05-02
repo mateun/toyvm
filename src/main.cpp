@@ -4,6 +4,7 @@
 #include <fstream>
 #include <assembler.h>
 #include <string.h>
+#include <display.h>
 
 
 /***
@@ -63,10 +64,14 @@ int main(int argc, char** args)  {
 	std::cout << "regs before: " << regs << std::endl;
 	std::cout << "stack before: " << sd << std::endl;
 	ubyte cmd;
+	WIN win = showWindow(10, 10, 320, 200);
 	while ((cmd = vm.fetch()) != 0) {
 		vm.execute(cmd);
 		
 		// probably call Video update function here!
+		DisplayEvent e = pollEvent(win);
+		if (e.type == e_quit)
+			break;
 
 	}
 	regs = vm.regdump();

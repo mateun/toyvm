@@ -6,18 +6,21 @@ void VM::e_addw() {
 	// TODO fix this - need to 
 	// pull the correct values 
 	// from 4-byte aligned stack!	
-	ubyte val1_0 = _stack[_sp--];
-	ubyte val1_1 = _stack[_sp--];
+	ubyte val1_0 = _stack[_sp-4];
+	ubyte val1_1 = _stack[_sp-3];
 	ui32 val1 = val1_0 | (val1_1 << 8); 
+	printf("val1 %u\n", val1);
 
-	ubyte val2_0 = _stack[_sp--];
-	ubyte val2_1 = _stack[_sp--];
+	ubyte val2_0 = _stack[_sp];
+	ubyte val2_1 = _stack[_sp+1];
 	ui32 val2 = val2_0 | (val2_1 << 8);
+	printf("val2 %u\n", val2);
  	ui32 res = val1 + val2;
 
+	_sp -= 4;
 	for (int i = 0; i<2; ++i) {
 		ubyte b = (res >> (8*i)) & 0xFF;
-		_stack[++_sp] = b;	
+		_stack[_sp+i] = b;	
 	}	
 	_cp++;
 

@@ -27,12 +27,12 @@ int main(int argc, char** args) {
 
 	SDL_Log("SDL initialized");
 	
-	if (SDL_CreateWindowAndRenderer(320, 200, SDL_WINDOW_SHOWN, &window, &renderer)) {
+	if (SDL_CreateWindowAndRenderer(640, 480, SDL_WINDOW_SHOWN, &window, &renderer)) {
 		SDL_Log("Error creating window %s", SDL_GetError());
 		exit(1);
 	}
 
-	SDL_Texture* a_tex = loadImageIntoTexture("../images/font.bmp", renderer);
+	SDL_Texture* a_tex = loadImageIntoTexture("../images/courier.bmp", renderer);
 	if (!a_tex) { SDL_Log("Error: tex loading %s", SDL_GetError()); exit(1); }
 
 	int cursorX=0, cursorY=0;
@@ -49,7 +49,7 @@ int main(int argc, char** args) {
 		SDL_SetRenderDrawColor(renderer, 0x20, 0x00, 0x00, 0xFF);
 		SDL_RenderClear(renderer);
 		SDL_SetRenderDrawColor(renderer, 0xee, 0xea, 0xee, 0xFF);
-		SDL_Rect r; fillRect(r, 32);
+		SDL_Rect r; fillRect(r, 256);
 		SDL_RenderCopy(renderer, a_tex, NULL, &r);
 		SDL_RenderPresent(renderer);
 	}
